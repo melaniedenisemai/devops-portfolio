@@ -60,3 +60,4 @@ La aplicación construida a lo largo del trayecto evolucionó en un sistema comp
 `Código → GitHub Actions (CI) → Docker Hub → Kubernetes (CD) → Prometheus + Grafana (Monitoreo)`
 
 **Repo principal:** [devops-TP06](https://github.com/melaniedenisemai/devops-TP06)
+# TP12B: Despliegue del stack de monitoreo (Prometheus, Grafana, Node Exporter y cAdvisor) en Kubernetes para NotesApp.
