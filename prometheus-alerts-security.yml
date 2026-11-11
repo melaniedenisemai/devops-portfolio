@@ -1,0 +1,46 @@
+groups:
+  - name: AlertasSeguridadNotesApp
+    rules:
+      # 1. Detección de Escaneos / Fuerza Bruta en API (Errores HTTP 4xx/5xx)
+      - alert: IngressPicoErrores4xx5xx
+        expr: sum(rate(app_requests_total{status=~"4..|5.."}[2m])) > 5
+        for: 10s
+        labels:
+          severity: critical
+          category: ciberseguridad
+        annotations:
+          summary: "Posible escaneo de vulnerabilidades o ataque de fuerza bruta"
+          description: "La API registra más de 5 peticiones fallidas (4xx/5xx) por segundo en los últimos 2 minutos."
+
+      # 2. Reinicio Frecuente de Pods
+      - alert: PodReiniciosFrecuentesSeguridad
+        expr: increase(kube_pod_container_status_restarts_total{namespace="devops-portfolio"}[5m]) > 2
+        for: 1m
+        labels:
+          severity: warning
+          category: infraestructura
+        annotations:
+          summary: "Pod reiniciándose repetidamente en el clúster"
+          description: "El pod {{ $labels.pod }} en el contenedor {{ $labels.container }} se ha reiniciado más de 2 veces en 5 minutos."
+
+      # 3. Intentos de Autenticación Fallidos / Fuerza Bruta en /login
+      - alert: InvasionIntentosAuthFallidos
+        expr: sum(rate(app_requests_total{status=~"401|404", endpoint="/login"}[2m])) > 5
+        for: 10s
+        labels:
+          severity: critical
+          category: aplicacion
+        annotations:
+          summary: "Múltiples intentos de inicio de sesión fallidos"
+          description: "Se detectan más de 5 fallos de autenticación/acceso por segundo en el endpoint /login."
+
+      # 4. Anomalía / Inyección en Base de Datos Postgres
+      - alert: PicoErroresConexionBaseDatos
+        expr: sum(rate(app_db_errors_total[2m])) > 2
+        for: 30s
+        labels:
+          severity: critical
+          category: persistencia
+        annotations:
+          summary: "Pico anómalo de errores en la base de datos PostgreSQL"
+          description: "La API registra consultas fallidas o desconexiones repetidas contra la base de datos."

@@ -61,3 +61,15 @@ La aplicación construida a lo largo del trayecto evolucionó en un sistema comp
 
 **Repo principal:** [devops-TP06](https://github.com/melaniedenisemai/devops-TP06)
 # TP12B: Despliegue del stack de monitoreo (Prometheus, Grafana, Node Exporter y cAdvisor) en Kubernetes para NotesApp.
+
+## TP12C — Alertas de Ciberseguridad y Detección de Anomalías
+
+Se implementó una capa proactiva de detección de incidentes sobre el clúster de Kubernetes (`devops-portfolio`), instrumentando reglas de alerta en Prometheus y visualización de rutas de error (*sad paths*) en Grafana:
+
+- **Reglas de Alerta (`prometheus-alerts-security.yml`):**
+  - `IngressPicoErrores4xx5xx`: Detección de escaneos y ataques de fuerza bruta (picos de errores 4xx/5xx).
+  - `InvasionIntentosAuthFallidos`: Detección de anomalías en el endpoint de autenticación `/login`.
+  - `PodReiniciosFrecuentesSeguridad` & `PicoErroresConexionBaseDatos`: Monitoreo de estabilidad de Pods y capa de persistencia PostgreSQL.
+- **Simulación y Validación (`scripts/generar-alertas-seguridad.sh`):**
+  - Script automatizado para la generación de tráfico anómalo y verificación del ciclo de vida de alertas (`pending` -> `firing`).
+
