@@ -73,3 +73,18 @@ Se implementó una capa proactiva de detección de incidentes sobre el clúster 
 - **Simulación y Validación (`scripts/generar-alertas-seguridad.sh`):**
   - Script automatizado para la generación de tráfico anómalo y verificación del ciclo de vida de alertas (`pending` -> `firing`).
 
+
+## TP12C — Alertas de Ciberseguridad y Detección de Anomalías
+
+Se implementó una capa proactiva de detección de incidentes de seguridad sobre el clúster de Kubernetes (`devops-portfolio`), instrumentando reglas de alerta en Prometheus y automatización de simulación de ataques:
+
+- **Reglas de Alerta (`prometheus-alerts-security.yml`):**
+  - `IngressPicoErrores4xx5xx`: Detección de escaneos y picos de errores 4xx/5xx en la API (`severity: critical`, `category: ciberseguridad`).
+  - `InvasionIntentosAuthFallidos`: Detección de ataques de fuerza bruta en `/login` (`severity: critical`, `category: aplicacion`).
+  - `PodReiniciosFrecuentesSeguridad`: Monitoreo de inestabilidad o reinicios recurrentes en pods (`severity: warning`, `category: infraestructura`).
+  - `PicoErroresConexionBaseDatos`: Detección de picos anómalos de errores en PostgreSQL (`severity: critical`, `category: persistencia`).
+
+- **Simulación de Tráfico Anómalo (`scripts/generar-alertas-seguridad.sh`):**
+  - Script automatizado mediante `python3` (`urllib.request`) ejecutado internamente en el contenedor `backend`.
+  - *Nota de entorno:* Se utilizó la librería nativa de Python debido a que la imagen base reducida del backend (`tp08-metrics`) prescinde del binario `curl` por buenas prácticas de hardening y minimización de superficie de ataque.
+
